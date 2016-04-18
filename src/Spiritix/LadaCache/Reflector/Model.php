@@ -21,12 +21,13 @@ use Spiritix\LadaCache\Database\Model as EloquentModel;
  */
 class Model implements ReflectorInterface
 {
+    use ReflectorTrait;
     /**
      * Model instance.
      *
      * @var EloquentModel
      */
-    protected $model;
+    protected $model;    
 
     /**
      * Initialize reflector.
@@ -35,7 +36,7 @@ class Model implements ReflectorInterface
      */
     public function __construct(EloquentModel $model)
     {
-        $this->model = $model;
+        $this->model = $model;        
     }
 
     /**
@@ -56,7 +57,7 @@ class Model implements ReflectorInterface
      */
     public function getTables()
     {
-        return [$this->model->getTable()];
+        return $this->resolveTable($this->model->getTable());
     }
 
     /**

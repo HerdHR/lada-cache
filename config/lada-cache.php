@@ -72,5 +72,16 @@ return [
     |
     */
     'exclude-tables' => [],
+	
+	/*
+    |--------------------------------------------------------------------------
+    | View tables
+    |--------------------------------------------------------------------------
+    |
+    | If you want to cache view you will need to put the joined of the tables into this
+    | array.
+    |
+    */
+	'view-tables' => [],
 
 ];

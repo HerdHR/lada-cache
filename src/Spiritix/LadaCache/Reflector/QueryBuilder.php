@@ -21,6 +21,7 @@ use Spiritix\LadaCache\Database\QueryBuilder as EloquentQueryBuilder;
  */
 class QueryBuilder implements HashableReflectorInterface
 {
+    use ReflectorTrait;
     /**
      * Since the query builder doesn't know about the related model, we have no way to figure out the name of the
      * primary key column. If someone is not using this value as primary key column it won't break anything, it just
@@ -35,7 +36,7 @@ class QueryBuilder implements HashableReflectorInterface
      *
      * @var QueryBuilder
      */
-    protected $queryBuilder;
+    protected $queryBuilder;    
 
     /**
      * Initialize reflector.
@@ -43,7 +44,7 @@ class QueryBuilder implements HashableReflectorInterface
      * @param EloquentQueryBuilder $queryBuilder
      */
     public function __construct(EloquentQueryBuilder $queryBuilder)
-    {
+    {        
         $this->queryBuilder = $queryBuilder;
     }
 
@@ -67,14 +68,18 @@ class QueryBuilder implements HashableReflectorInterface
     public function getTables()
     {
         // Get main table
-        $tables = [$this->queryBuilder->from];
-
+        $tables =  $this->resolveTable($this->queryBuilder->from);
+        
         // Add possible join tables
         $joins = $this->queryBuilder->joins ?: [];
         foreach ($joins as $join) {
+            
+            $resolveTables = $this->resolveTable($join->table);
 
-            if (!in_array($join->table, $tables)) {
-                $tables[] = $join->table;
+            foreach($resolveTables as $resolveTable) {                
+                if (!in_array($resolveTable, $tables)) {
+                    $tables[] = $resolveTable;                
+                }
             }
         }
 
@@ -112,10 +117,12 @@ class QueryBuilder implements HashableReflectorInterface
 
             if ($where['type'] == 'Basic') {
 
-                if ($where['operator'] == '=' && is_numeric($where['value'])) {
+                if ($where['operator'] == '=' && is_int($where['value'])) {
                     $rows[] = $where['value'];
                 }
-            } elseif ($where['type'] == 'In') {
+            }
+
+            if ($where['type'] == 'In') {
                 $rows += $where['values'];
             }
         }

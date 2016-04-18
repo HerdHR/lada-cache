@@ -29,30 +29,30 @@ class Command extends IlluminateCommand
      */
     protected function writeConfig($key, $value)
     {
-        $file = config_path(LadaCacheServiceProvider::CONFIG_FILE);
+        // $file = config_path(LadaCacheServiceProvider::CONFIG_FILE);
 
-        if (!File::exists($file)) {
-            $this->call('vendor:publish');
-        }
+        // if (!File::exists($file)) {
+        //     $this->call('vendor:publish');
+        // }
 
-        try {
-            $contents = File::get($file);
+        // try {
+        //     $contents = File::get($file);
 
-            $contents = preg_replace(
-                "/'" . $key . "'(.*?),\s?\n/s",
-                "'" . $key . "' => " . $value . ",\n\n",
-                $contents
-            );
+        //     $contents = preg_replace(
+        //         "/'" . $key . "'(.*?),\s?\n/s",
+        //         "'" . $key . "' => " . $value . ",\n\n",
+        //         $contents
+        //     );
 
-            File::put($file, $contents);
-        }
-        catch (Exception $e) {
-            $this->error('Could not write config file');
+        //     File::put($file, $contents);
+        // }
+        // catch (Exception $e) {
+        //     $this->error('Could not write config file');
 
-            return false;
-        }
+        //     return false;
+        // }
 
-        $this->call('config:cache');
+        // $this->call('config:cache');
 
         return true;
     }

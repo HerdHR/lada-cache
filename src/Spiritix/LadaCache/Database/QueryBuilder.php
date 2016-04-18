@@ -63,6 +63,30 @@ class QueryBuilder extends Builder
     }
 
     /**
+     * Update record from the database.
+     *
+     * Unfortunately Laravel does not fire the update event for models if one uses the update(array $values) method.
+     * Therefore we have to hook into the query builder update method here to prevent this issue.
+     *
+     * @param  array $values
+     *
+     * @return int
+     */
+    public function update(array $values)
+    {
+        $invalidator = app()->make('lada.invalidator');
+        $reflector = new QueryBuilderReflector($this);
+        $manager = new Manager($reflector);
+
+        if($manager->shouldCache()){
+            $tagger = new Tagger($reflector);
+            $invalidator->invalidate($tagger->getTags());
+        }
+
+        return parent::update($values);
+    }
+
+    /**
      * Delete a record from the database.
      *
      * Unfortunately Laravel does not fire the deleted event for models if one uses the ->detach() method.
@@ -75,9 +99,13 @@ class QueryBuilder extends Builder
     public function delete($id = null)
     {
         $invalidator = app()->make('lada.invalidator');
+        $reflector = new QueryBuilderReflector($this);
+        $manager = new Manager($reflector);
 
-        $tagger = new Tagger(new QueryBuilderReflector($this));
-        $invalidator->invalidate($tagger->getTags());
+        if($manager->shouldCache()){
+            $tagger = new Tagger(new QueryBuilderReflector($this));
+            $invalidator->invalidate($tagger->getTags());
+        }
 
         return parent::delete($id);
     }

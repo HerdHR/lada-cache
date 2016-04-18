@@ -45,13 +45,13 @@ class LadaCacheServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/../../../config/' . self::CONFIG_FILE => config_path(self::CONFIG_FILE),
-        ]);
+        // $this->publishes([
+        //     __DIR__ . '/../../../config/' . self::CONFIG_FILE => config_path(self::CONFIG_FILE),
+        // ]);
 
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../../config/' . self::CONFIG_FILE, str_replace('.php', '', self::CONFIG_FILE)
-        );
+        // $this->mergeConfigFrom(
+        //     __DIR__ . '/../../../config/' . self::CONFIG_FILE, str_replace('.php', '', self::CONFIG_FILE)
+        // );
     }
 
     /**

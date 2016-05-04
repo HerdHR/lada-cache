@@ -82,14 +82,13 @@ class Invalidator
      * @param array $items
      */
     private function deleteItems(array $items)
-    {
-        $cmd = ['key'];
-        $cmd = array_merge($cmd, $items);
-        $this->redis->command('del', $cmd);
-
-        //Performance improvement
+    {   
+        // Disable for Performance improvement
         // foreach ($items as $item) {
         //     $this->redis->del($item);
-        // }
+        // }     
+
+        $cmdKey = array_merge(['key'], $items);
+        $this->redis->command('del', $cmdKey);
     }
 }

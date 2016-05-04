@@ -83,9 +83,13 @@ class Invalidator
      */
     private function deleteItems(array $items)
     {
-        foreach ($items as $item) {
+        $cmd = ['key'];
+        $cmd = array_merge($cmd, $items);
+        $this->redis->command('del', $cmd);
 
-            $this->redis->del($item);
-        }
+        //Performance improvement
+        // foreach ($items as $item) {
+        //     $this->redis->del($item);
+        // }
     }
 }

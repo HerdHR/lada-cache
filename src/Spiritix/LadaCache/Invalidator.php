@@ -82,12 +82,7 @@ class Invalidator
      * @param array $items
      */
     private function deleteItems(array $items)
-    {   
-        // Disable for Performance improvement
-        // foreach ($items as $item) {
-        //     $this->redis->del($item);
-        // }    
-
+    { 
         if(count($items) > 0 ){
             $params = array_merge(['key'], $items);
             $this->redis->command('del', $params);

@@ -89,8 +89,8 @@ class Invalidator
         // }    
 
         if(count($items) > 0 ){
-            $param = array_merge(['key'], $items);
-            $this->redis->command('del', $param);
+            $params = array_merge(['key'], $items);
+            $this->redis->command('del', $params);
         } 
     }
 }

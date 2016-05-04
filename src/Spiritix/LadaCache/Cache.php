@@ -103,9 +103,7 @@ class Cache
     public function flush()
     {
         $keys = $this->redis->keys($this->redis->prefix('*'));
-
-        foreach ($keys as $key) {
-            $this->redis->del($key);
-        }
+        $params = array_merge(['key'], $keys);
+        $this->redis->command('del', $params);
     }
 }

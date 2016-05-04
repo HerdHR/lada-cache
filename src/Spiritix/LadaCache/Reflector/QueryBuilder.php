@@ -72,18 +72,11 @@ class QueryBuilder implements HashableReflectorInterface
         
         // Add possible join tables
         $joins = $this->queryBuilder->joins ?: [];
-        foreach ($joins as $join) {
-            
-            $resolveTables = $this->resolveTable($join->table);
-
-            foreach($resolveTables as $resolveTable) {                
-                if (!in_array($resolveTable, $tables)) {
-                    $tables[] = $resolveTable;                
-                }
-            }
+        foreach ($joins as $join) {            
+            $tables =  array_merge($tables, $this->resolveTable($join->table));            
         }
 
-        return $tables;
+        return array_unique($tables);
     }
 
     /**

@@ -86,9 +86,11 @@ class Invalidator
         // Disable for Performance improvement
         // foreach ($items as $item) {
         //     $this->redis->del($item);
-        // }     
+        // }    
 
-        $cmdKey = array_merge(['key'], $items);
-        $this->redis->command('del', $cmdKey);
+        if(count($items) > 0 ){
+            $param = array_merge(['key'], $items);
+            $this->redis->command('del', $param);
+        } 
     }
 }

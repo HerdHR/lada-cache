@@ -58,7 +58,7 @@ class FunctionCache
      *
      * @return results
      */
-    public static function execute(string $database, string $class, string $function, array $arguments, array $tables, array $rows) {
+    public static function execute($database, $class, $function, array $arguments, array $tables, array $rows) {
         $arguments_key = self::cloneArray($arguments);
         $reflector = new FunctionReflector ($database, $class, $function, $arguments_key, $tables, $rows);
         $manager = new Manager($reflector);
@@ -99,7 +99,7 @@ class FunctionCache
      *
      * @return results
      */
-    public static function executeStatic(string $database, string $class, string $function, array $arguments, array $tables, array $rows) {
+    public static function executeStatic($database, $class, $function, array $arguments, array $tables, array $rows) {
         $arguments_key =self::cloneArray($arguments);
 
         $reflector = new FunctionReflector ($database, $class, $function, $arguments_key, $tables, $rows);
@@ -147,7 +147,7 @@ class FunctionCache
      *
      * @return boolean
      */
-    public function has(string $key) {
+    public function has($key) {
         $has = false;
         if($this->shouldCache()){
             $reflector = $this->getKeyFunctionReflector ($key);
@@ -174,7 +174,7 @@ class FunctionCache
      *
      * @return boolean
      */
-    public function set(string $key, $value, array $tables, array $rows) {
+    public function set($key, $value, array $tables, array $rows) {
         if($this->shouldCache()){
             $reflector = $this->getKeyFunctionReflector ($key, $tables, $rows);
             $manager = new Manager($reflector);
@@ -208,7 +208,7 @@ class FunctionCache
         }
     }
 
-    private function getKeyFunctionReflector(string $key = "", array $tables = [], array $rows = []) {
+    private function getKeyFunctionReflector($key = "", array $tables = [], array $rows = []) {
         return new FunctionReflector ($this->database, $this->class, $this->function . "\\$key", $this->arguments, $tables, $rows);
     }
 

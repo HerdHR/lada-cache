@@ -37,7 +37,7 @@ class FunctionCache
      *
      * @param string database
      */
-    public function __construct(string $database, string $class, string $function, array $arguments)
+    public function __construct($database, $class, $function, array $arguments)
     {
         $this->database = $database;
         $this->class = $class;

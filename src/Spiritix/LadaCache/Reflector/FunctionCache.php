@@ -20,8 +20,8 @@ namespace Spiritix\LadaCache\Reflector;
 class FunctionCache implements HashableReflectorInterface
 {
     use ReflectorTrait;
-    
-    private $database;        
+
+    private $database;
     private $class;
     private $function;
     private $arguments;
@@ -37,13 +37,13 @@ class FunctionCache implements HashableReflectorInterface
      * @param array $parameters
      * @param array $tables
      */
-    public function __construct(string $database, string $class, string $function, array $arguments, array $tables, array $rows)
-    { 
+    public function __construct($database, $class, $function, array $arguments, array $tables, array $rows)
+    {
         $this->database = $database;
         $this->class = $class;
         $this->function = $function;
         $this->arguments = $arguments;
-        $this->tables = $tables;  
+        $this->tables = $tables;
         $this->rows = $rows;
     }
 

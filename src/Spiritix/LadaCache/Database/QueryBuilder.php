@@ -63,6 +63,32 @@ class QueryBuilder extends Builder
     }
 
     /**
+     * Insert record into database
+     *
+     * @param  array $values
+     *
+     * @return bool
+     */
+    public function insert(array $values) {
+        $this->invalidate();
+        return parent::insert($values);
+    }
+
+    /**
+     * Insert a new record and get the value of the primary key.
+     *
+     * @param  array  $values
+     * @param  string $sequence
+     *
+     * @return int
+     */
+    public function insertGetId(array $values, $sequence = null)
+    {
+        $this->invalidate();
+        return parent::insertGetId($values, $sequence);
+    }
+
+    /**
      * Update record from the database.
      *
      * Unfortunately Laravel does not fire the update event for models if one uses the update(array $values) method.
@@ -74,15 +100,7 @@ class QueryBuilder extends Builder
      */
     public function update(array $values)
     {
-        $invalidator = app()->make('lada.invalidator');
-        $reflector = new QueryBuilderReflector($this);
-        $manager = new Manager($reflector);
-
-        if($manager->shouldCache()){
-            $tagger = new Tagger($reflector);
-            $invalidator->invalidate($tagger->getTags());
-        }
-
+        $this->invalidate();
         return parent::update($values);
     }
 
@@ -98,6 +116,21 @@ class QueryBuilder extends Builder
      */
     public function delete($id = null)
     {
+       $this->invalidate();
+        return parent::delete($id);
+    }
+
+    /**
+     * Truncate all records from the database.
+     *
+     * @return null
+     */
+    public function truncate() {
+        $this->invalidate();
+        return parent::truncate();
+    }
+
+    private function invalidate(){
         $invalidator = app()->make('lada.invalidator');
         $reflector = new QueryBuilderReflector($this);
         $manager = new Manager($reflector);
@@ -106,7 +139,5 @@ class QueryBuilder extends Builder
             $tagger = new Tagger(new QueryBuilderReflector($this));
             $invalidator->invalidate($tagger->getTags());
         }
-
-        return parent::delete($id);
     }
 }

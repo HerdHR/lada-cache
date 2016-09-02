@@ -76,7 +76,7 @@ class QueryBuilder implements HashableReflectorInterface
             $tables =  array_merge($tables, $this->resolveTable($join->table));            
         }
 
-        $wheres = $this->queryBuilder->wheres;
+        $wheres = $this->queryBuilder->wheres ?: [];        
         foreach($wheres as $where) {
            if (!isset($where['column'])) {
                 continue;
@@ -85,6 +85,7 @@ class QueryBuilder implements HashableReflectorInterface
             list($table, $column) = $this->splitTableAndColumn($where['column']);
             $tables =  array_merge($tables, $this->resolveTable($table));
         }
+               
 
         return array_unique($tables);
     }

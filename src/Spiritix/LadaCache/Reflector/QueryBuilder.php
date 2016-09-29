@@ -36,7 +36,7 @@ class QueryBuilder implements HashableReflectorInterface
      *
      * @var QueryBuilder
      */
-    protected $queryBuilder;    
+    protected $queryBuilder;
 
     /**
      * Initialize reflector.
@@ -44,7 +44,7 @@ class QueryBuilder implements HashableReflectorInterface
      * @param EloquentQueryBuilder $queryBuilder
      */
     public function __construct(EloquentQueryBuilder $queryBuilder)
-    {        
+    {
         $this->queryBuilder = $queryBuilder;
     }
 
@@ -69,14 +69,17 @@ class QueryBuilder implements HashableReflectorInterface
     {
         // Get main table
         $tables =  $this->resolveTable($this->queryBuilder->from);
-        
+
         // Add possible join tables
         $joins = $this->queryBuilder->joins ?: [];
-        foreach ($joins as $join) {            
-            $tables =  array_merge($tables, $this->resolveTable($join->table));            
+        foreach ($joins as $join) {
+            if($join->table instanceof \Illuminate\Database\Query\Expression){
+                return null;
+            }
+            $tables =  array_merge($tables, $this->resolveTable($join->table));
         }
 
-        $wheres = $this->queryBuilder->wheres ?: [];        
+        $wheres = $this->queryBuilder->wheres ?: [];
         foreach($wheres as $where) {
            if (!isset($where['column'])) {
                 continue;
@@ -85,7 +88,7 @@ class QueryBuilder implements HashableReflectorInterface
             list($table, $column) = $this->splitTableAndColumn($where['column']);
             $tables =  array_merge($tables, $this->resolveTable($table));
         }
-               
+
 
         return array_unique($tables);
     }

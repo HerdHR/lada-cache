@@ -99,23 +99,26 @@ class Manager
     {
         $tables = $this->reflector->getTables();
 
-        if ($this->isInclusive()) {
+        if($tables) {
+            if ($this->isInclusive()) {
+                foreach ($tables as $table) {
+                    if (!$this->tableIncluded($table)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
             foreach ($tables as $table) {
-                if (!$this->tableIncluded($table)) {
+                if ($this->tableExcluded($table)) {
                     return false;
                 }
             }
 
             return true;
         }
-
-        foreach ($tables as $table) {
-            if ($this->tableExcluded($table)) {
-                return false;
-            }
-        }
-
-        return true;
+        return false;
     }
 
     /**

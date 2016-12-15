@@ -81,9 +81,13 @@ class QueryBuilder implements HashableReflectorInterface
 
         $wheres = $this->queryBuilder->wheres ?: [];
         foreach($wheres as $where) {
-           if (!isset($where['column'])) {
+         if (!isset($where['column'])) {
                 continue;
-           }
+         }
+
+         if($where['column'] instanceof \Illuminate\Database\Query\Expression) {
+             return null;
+         }
 
             list($table, $column) = $this->splitTableAndColumn($where['column']);
             $tables =  array_merge($tables, $this->resolveTable($table));

@@ -99,8 +99,8 @@ class QueryBuilder extends Builder
      * @return int
      */
     public function update(array $values)
-    {
-        $this->invalidate();
+    {        
+        $this->invalidate(true);
         return parent::update($values);
     }
 
@@ -130,14 +130,19 @@ class QueryBuilder extends Builder
         return parent::truncate();
     }
 
-    private function invalidate(){
+    private function invalidate($includeRow = false){
         $invalidator = app()->make('lada.invalidator');
         $reflector = new QueryBuilderReflector($this);
         $manager = new Manager($reflector);
 
         if($manager->shouldCache()){
             $tagger = new Tagger(new QueryBuilderReflector($this));
+            
             $invalidator->invalidate($tagger->getTags());
+            if($includeRow){
+                $invalidator->invalidate($tagger->getTagsRow());    
+            }
+            
         }
     }
 }

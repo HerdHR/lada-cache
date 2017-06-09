@@ -94,12 +94,30 @@ class Tagger
 
         // Now loop trough tables and create a tag for each row
         foreach ($tables as $table) {
-            $tags = array_merge($tags, $this->prefix($rows, $this->prefix(self::PREFIX_ROW, $table)));
+            if ($table != ":table:"){                
+                $tags = array_merge($tags, $this->prefix([""], $this->prefix(self::PREFIX_ROW, $table)));
+                $tags = array_merge($tags, $this->prefix($rows, $this->prefix(self::PREFIX_ROW, $table)));    
+            }            
         }
 
         // Add tables to tags if requested
         if ($this->considerTables) {
             $tags = array_merge($tables, $tags);
+        }
+
+        return $this->prefix($tags, $database);
+    }
+
+    public function getTagsRow(){
+        $tags = [];
+        $tables = $this->prefix($this->reflector->getTables(), self::PREFIX_TABLE);
+        $database = $this->prefix($this->reflector->getDatabase(), self::PREFIX_DATABASE);
+
+        foreach ($tables as $table) {
+            if ($table != ":table:"){
+                $tags = array_merge($tags, $this->prefix([""], $this->prefix(self::PREFIX_ROW, $table)));                
+            }
+            
         }
 
         return $this->prefix($tags, $database);

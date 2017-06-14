@@ -89,7 +89,7 @@ class QueryBuilder implements HashableReflectorInterface
                  return null;
              }
 
-            if($where['column'] instanceof \Illuminate\Database\Query\Expression) {
+            if($where['type'] == "Nested") {
                  return null;
             }
 

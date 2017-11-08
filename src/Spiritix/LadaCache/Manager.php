@@ -41,7 +41,7 @@ class Manager
        *
        * @var bool
        */
-        private disableCachingOnly;
+    private $disableCachingOnly;
 
     /**
      * Contains a list of all tables that must be cached.
@@ -101,7 +101,7 @@ class Manager
    *
    * @return bool
    */
-    private function disableCachingOnly()
+    public function disableCachingOnly()
     {
         return ($this->disableCachingOnly === true);
     }

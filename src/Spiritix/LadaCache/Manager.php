@@ -35,6 +35,14 @@ class Manager
      */
     private $cacheActive;
 
+
+      /**
+       * True if caching is disable.
+       *
+       * @var bool
+       */
+        private disableCachingOnly;
+
     /**
      * Contains a list of all tables that must be cached.
      *
@@ -59,6 +67,7 @@ class Manager
         $this->reflector = $reflector;
 
         $this->cacheActive = (bool) config('lada-cache.active');
+        $this->disableCachingOnly = (bool) config('lada-cache.disable-caching-only');
         $this->includeTables = (array) config('lada-cache.include-tables');
         $this->excludeTables = (array) config('lada-cache.exclude-tables');
     }
@@ -85,6 +94,16 @@ class Manager
     private function cacheEnabled()
     {
         return ($this->cacheActive === true);
+    }
+
+  /**
+   * Checks if the cache is enabled.
+   *
+   * @return bool
+   */
+    private function disableCachingOnly()
+    {
+        return ($this->disableCachingOnly === true);
     }
 
     /**
@@ -154,4 +173,6 @@ class Manager
     {
         return !empty($this->includeTables);
     }
+
+
 }

@@ -38,7 +38,7 @@ class QueryBuilder extends Builder
         $manager = new Manager($reflector);
 
         // Check if query should be cached
-        if (!$manager->shouldCache()) {
+        if (!$manager->shouldCache() || $manager->disableCachingOnly()) {
             return parent::runSelect();
         }
 
@@ -99,7 +99,7 @@ class QueryBuilder extends Builder
      * @return int
      */
     public function update(array $values)
-    {        
+    {
         $this->invalidate(true);
         return parent::update($values);
     }
@@ -137,12 +137,12 @@ class QueryBuilder extends Builder
 
         if($manager->shouldCache()){
             $tagger = new Tagger(new QueryBuilderReflector($this));
-            
+
             $invalidator->invalidate($tagger->getTags());
             if($includeRow){
-                $invalidator->invalidate($tagger->getTagsRow());    
+                $invalidator->invalidate($tagger->getTagsRow());
             }
-            
+
         }
     }
 }

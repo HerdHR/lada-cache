@@ -137,7 +137,8 @@ class QueryBuilder implements HashableReflectorInterface
                 }
             }
 
-            if ($where['type'] == 'In') {
+            //We need check whether the where value is null, otherwise will have Error: Unsupported operand types
+            if ($where['type'] == 'In' && $where['values']) {
                 $rows += $where['values'];
             }
         }

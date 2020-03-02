@@ -72,6 +72,7 @@ class Cache
     {
         $key = $this->redis->prefix($key);
         $this->redis->set($key, $this->encoder->encode($data));
+        $this->redis->expire($key, env('LADA_CACHE_EXPIRE', 86400));
 
         foreach ($tags as $tag) {
             $this->redis->sadd($this->redis->prefix($tag), [$key]);

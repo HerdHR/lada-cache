@@ -40,9 +40,13 @@ class FlushCommand extends Command
      */
     public function handle()
     {
-        $cache = app()->make('lada.cache');
-        $cache->flush();
+        if (env('LADA_CACHE_ACTIVE')) {
+            $cache = app()->make('lada.cache');
+            $cache->flush();
 
-        $this->info('Cache flushed');
+            $this->info('Cache flushed');
+        } else {
+            $this->info('LadaCache is disabled');
+        }
     }
 }

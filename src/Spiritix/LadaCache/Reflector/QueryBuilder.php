@@ -67,11 +67,18 @@ class QueryBuilder implements HashableReflectorInterface
      */
     public function getTables()
     {
+        return $this->getRecursiveTables($this->queryBuilder);
+    }
+
+    /**
+     * Do recursive getTables to support QueryBuilder->has()
+     **/
+    public function getRecursiveTables($query_builder) {
         // Get main table
-        $tables =  $this->resolveTable($this->queryBuilder->from);
+        $tables =  $this->resolveTable($query_builder->from);
 
         // Add possible join tables
-        $joins = $this->queryBuilder->joins ?: [];
+        $joins = $query_builder->joins ?: [];
         foreach ($joins as $join) {
             if($join->table instanceof \Illuminate\Database\Query\Expression){
                 return null;
@@ -79,25 +86,29 @@ class QueryBuilder implements HashableReflectorInterface
             $tables =  array_merge($tables, $this->resolveTable($join->table));
         }
 
-        $wheres = $this->queryBuilder->wheres ?: [];
+        $wheres = $query_builder->wheres ?: [];
+
         foreach($wheres as $where) {
-            if($where['type'] == "Nested") {
+            if (isset($where['query'])) {
+                return array_merge($tables, $this->getRecursiveTables($where['query']));
+            }
+
+            if ($where['type'] == 'Nested') {
                  return null;
             }
-            
-             if (!isset($where['column'])) {
-                    continue;
-             }
 
-             if($where['column'] instanceof \Illuminate\Database\Query\Expression) {
-                 return null;
-             }
+            if (!isset($where['column'])) {
+                continue;
+            }
+
+            if($where['column'] instanceof \Illuminate\Database\Query\Expression) {
+                return null;
+            }
 
             list($table, $column) = $this->splitTableAndColumn($where['column']);
-            $tables =  array_merge($tables, $this->resolveTable($table));
+
+            $tables = array_merge($tables, $this->resolveTable($table));
         }
-
-
         return array_unique($tables);
     }
 

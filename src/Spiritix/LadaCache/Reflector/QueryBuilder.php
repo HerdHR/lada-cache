@@ -81,7 +81,7 @@ class QueryBuilder implements HashableReflectorInterface
         $joins = $query_builder->joins ?: [];
         foreach ($joins as $join) {
             if($join->table instanceof \Illuminate\Database\Query\Expression){
-                return null;
+                return [];
             }
             $tables =  array_merge($tables, $this->resolveTable($join->table));
         }
@@ -94,7 +94,7 @@ class QueryBuilder implements HashableReflectorInterface
             }
 
             if ($where['type'] == 'Nested') {
-                 return null;
+                 return [];
             }
 
             if (!isset($where['column'])) {
@@ -102,7 +102,7 @@ class QueryBuilder implements HashableReflectorInterface
             }
 
             if($where['column'] instanceof \Illuminate\Database\Query\Expression) {
-                return null;
+                return [];
             }
 
             list($table, $column) = $this->splitTableAndColumn($where['column']);
